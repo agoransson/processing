@@ -6123,6 +6123,14 @@ public class PApplet extends Applet
     throw new RuntimeException("File is not JSON formatted");
   }
 
+  public boolean saveJSON(JSON json, String filename) {
+    return saveJSON(json, filename, null);
+  }
+
+  public boolean saveJSON(JSON json, String filename, String options) {
+    return json.save(saveFile(filename), options);
+  }
+
   /**
    * @webref input:files
    * @see PApplet#loadTable(String)
