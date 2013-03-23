@@ -8,28 +8,24 @@
  *
  * Here is what the JSON looks like (partial):
  *
-{
-  "bubbles": {
-    "bubble": [
-      {
-        "position": {
-          "x": 160,
-          "y": 103
-        },
-        "diameter": 43.19838,
-        "label": "Happy"
-      },
-      {
-        "position": {
-          "x": 121,
-          "y": 179
-        },
-        "diameter": 44.758068,
-        "label": "Melancholy"
-      }
-    ]
+[
+  {
+    "position": {
+      "x": 160,
+      "y": 103
+    },
+    "diameter": 43.19838,
+    "label": "Happy"
+  },
+  {
+    "position": {
+      "x": 121,
+      "y": 179
+    },
+    "diameter": 44.758068,
+    "label": "Melancholy"
   }
-}
+]
  */
 
 // An Array of Bubble objects
@@ -85,10 +81,10 @@ void loadData() {
 void mousePressed() {
 
   // Create a new JSON bubble element
-  JSON newBubble = new JSON();
+  JSON newBubble = JSON.createObject();
 
   // Set the position element
-  JSON position = new JSON();
+  JSON position = JSON.createObject();
   position.setInt("x", mouseX);
   position.setInt("y", mouseY);
   newBubble.setJSON("position", position);
@@ -108,10 +104,10 @@ void mousePressed() {
     // Delete the first one
     json.removeIndex(0);
   }
-	
-  // Save a new JSON file
-  saveStrings("data/data.json", split(root.toString(), "\n"));
 
+  // Save a new JSON file
+  saveJSON(json, dataPath("data.json"));
+	
   // reload the new data 
   loadData();
 }
