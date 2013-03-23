@@ -128,16 +128,15 @@ public class JSON {
     throw new RuntimeException("File is not JSON formatted");
   }
 
-  // JSONObject and JSONArray classes below
-
+  public JSONType getType(){
+    return type;
+  }
 
   // JSONObject methods
 
-  //String, Int, Long, Float, Double, Boolean, JSONArray, JSONObject
-
   public String getString(String key) {
     if( type != JSONType.OBJECT ){
-         throw new RuntimeException("Not a JSONObject");
+         throw new RuntimeException("Not a JSONObject, perhaps you wanted getString(int)?");
     }else{
       return obj.getInnerString(key);
     }
@@ -145,7 +144,7 @@ public class JSON {
 
   public int getInt(String key) {
     if( type != JSONType.OBJECT ){
-         throw new RuntimeException("Not a JSONObject");
+         throw new RuntimeException("Not a JSONObject, perhaps you wanted getInt(int)?");
     }else{
       return obj.getInnerInt(key);
     }
@@ -153,7 +152,7 @@ public class JSON {
 
   public float getFloat(String key) {
     if( type != JSONType.OBJECT ){
-         throw new RuntimeException("Not a JSONObject");
+         throw new RuntimeException("Not a JSONObject, perhaps you wanted getFloat(int)?");
     }else{
       return obj.getInnerFloat(key);
     }
@@ -161,7 +160,7 @@ public class JSON {
 
   public double getDouble(String key) {
     if( type != JSONType.OBJECT ){
-         throw new RuntimeException("Not a JSONObject");
+         throw new RuntimeException("Not a JSONObject, perhaps you wanted getDouble(int)?");
     }else{
       return obj.getInnerDouble(key);
     }
@@ -169,32 +168,40 @@ public class JSON {
 
   public boolean getBoolean(String key) {
     if( type != JSONType.OBJECT ){
-         throw new RuntimeException("Not a JSONObject");
+         throw new RuntimeException("Not a JSONObject, perhaps you wanted getBoolean(int)?");
     }else{
       return obj.getInnerBoolean(key);
     }
   }
 
-  public JSONObject getJSONObject(String key) {
+  public JSONObject getObject(String key) {
     if( type != JSONType.OBJECT ){
-         throw new RuntimeException("Not a JSONObject");
+         throw new RuntimeException("Not a JSONObject, perhaps you wanted getObject(int)?");
     }else{
-      return obj.getInnerJSONObject(key);
+      return obj.getInnerObject(key);
     }
   }
 
-  public JSONArray getJSONArray(String key) {
+  public JSONArray getArray(String key) {
     if( type != JSONType.OBJECT ){
-         throw new RuntimeException("Not a JSONObject");
+         throw new RuntimeException("Not a JSONObject, perhaps you wanted getArray(int)?");
     }else{
-      return obj.getInnerJSONArray(key);
+      return obj.getInnerArray(key);
+    }
+  }
+
+  public JSON getJSON(String key){
+    if( type != JSONType.OBJECT ){
+         throw new RuntimeException("Not a JSONObject, perhaps you wanted getJSON(int)?");
+    }else{
+      return obj.getInnerJSON(key);
     }
   }
 
   //JSONArray methods
   public String getString(int index){
     if( type != JSONType.ARRAY ){
-         throw new RuntimeException("Not a JSONArray");
+         throw new RuntimeException("Not a JSONArray, perhaps you wanted getString(String)?");
     }else{
       return arr.getInnerString(index);
     }
@@ -202,7 +209,7 @@ public class JSON {
 
   public int getInt(int index){
     if( type != JSONType.ARRAY ){
-         throw new RuntimeException("Not a JSONArray");
+         throw new RuntimeException("Not a JSONArray, perhaps you wanted getInt(String)?");
     }else{
       return arr.getInnerInt(index);
     }
@@ -210,7 +217,7 @@ public class JSON {
 
   public float getFloat(int index){
     if( type != JSONType.ARRAY ){
-         throw new RuntimeException("Not a JSONArray");
+         throw new RuntimeException("Not a JSONArray, perhaps you wanted getFloat(String)?");
     }else{
       return arr.getInnerFloat(index);
     }
@@ -218,7 +225,7 @@ public class JSON {
 
   public double getDouble(int index){
     if( type != JSONType.ARRAY ){
-         throw new RuntimeException("Not a JSONArray");
+         throw new RuntimeException("Not a JSONArray, perhaps you wanted getDouble(String)?");
     }else{
       return arr.getInnerDouble(index);
     }
@@ -226,25 +233,33 @@ public class JSON {
 
   public boolean getBoolean(int index){
     if( type != JSONType.ARRAY ){
-         throw new RuntimeException("Not a JSONArray");
+         throw new RuntimeException("Not a JSONArray, perhaps you wanted getBoolean(String)?");
     }else{
       return arr.getInnerBoolean(index);
     }
   }
 
-  public JSONArray getArray(int index){
+  public JSON getArray(int index){
     if( type != JSONType.ARRAY ){
-         throw new RuntimeException("Not a JSONArray");
+         throw new RuntimeException("Not a JSONArray, perhaps you wanted getArray(String)?");
     }else{
       return arr.getInnerArray(index);
     }
   }
 
-  public JSONObject getObject(int index){
+  public JSON getObject(int index){
     if( type != JSONType.ARRAY ){
-         throw new RuntimeException("Not a JSONArray");
+         throw new RuntimeException("Not a JSONArray, perhaps you wanted getObject(String)?");
     }else{
       return arr.getInnerObject(index);
+    }
+  }
+
+  public JSON getJSON(int index){
+    if( type != JSONType.ARRAY ){
+         throw new RuntimeException("Not a JSONArray, perhaps you wanted getJSON(String)?");
+    }else{
+      return arr.getInnerJSON(index);
     }
   }
 
@@ -883,7 +898,7 @@ public class JSON {
      * @throws      JSONException if the key is not found or
      *  if the value is not a JSONArray.
      */
-    public JSONArray getInnerJSONArray(String key) {
+    public JSONArray getInnerArray(String key) {
       Object object = this.get(key);
       if (object instanceof JSONArray) {
         return (JSONArray)object;
@@ -900,14 +915,24 @@ public class JSON {
      * @throws      JSONException if the key is not found or
      *  if the value is not a JSONObject.
      */
-    public JSONObject getInnerJSONObject(String key) {
+    public JSONObject getInnerObject(String key) {
       Object object = this.get(key);
+      System.out.println(object.getClass().getName());
       if (object instanceof JSONObject) {
         return (JSONObject)object;
       }
       throw new RuntimeException("JSONObject[" + quote(key) + "] is not a JSONObject.");
     }
 
+    public JSON getInnerJSON(String key) {
+      Object object = this.get(key);
+      if (object instanceof JSONObject) {
+        return (JSONObject)object;
+      }else if( object instanceof JSONArray ){
+        return (JSONArray)object;
+      }
+      throw new RuntimeException("JSONObject[" + quote(key) + "] is not a JSONObject.");
+    }
 
   //  /**
   //   * Get an array of field names from a JSONObject.
@@ -2703,6 +2728,15 @@ public class JSON {
       throw new RuntimeException("JSONArray[" + index + "] is not a JSONObject.");
     }
 
+    public JSON getInnerJSON(int index) {
+      Object object = this.get(index);
+      if (object instanceof JSONObject) {
+        return (JSONObject)object;
+      }else if( object instanceof JSONArray){
+        return (JSONArray)object;
+      }
+      throw new RuntimeException("JSONArray[" + index + "] is not a JSONObject.");
+    }
 
   //  /**
   //   * Get the optional boolean value associated with an index.
