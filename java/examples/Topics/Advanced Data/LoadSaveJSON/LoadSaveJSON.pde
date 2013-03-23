@@ -34,8 +34,9 @@
 
 // An Array of Bubble objects
 Bubble[] bubbles;
-// A Table object
-JSONArray json;
+
+// A JSON object
+JSON json;
 
 void setup() {
   size(640, 360);
@@ -57,29 +58,18 @@ void draw() {
 
 void loadData() {
   // Load JSON file
-  String jsonString = join(loadStrings("data.json"), "\n");
-  //println(jsonString);
+  json = loadJSON("data.json");
 
-  // Load the entire document in a JSONObject
-  JSONObject root = JSONObject.parse(jsonString);
-
-  // Fetch the internal JSONObject called "bubbles" (all the bubbles are stored inside this object)
-  JSONObject json_bubbles = root.getJSONObject("bubbles");
-
-  // Load the JSONArray of bubbles
-  json = json_bubbles.getJSONArray("bubble");
-
-  // The size of the array of Bubble objects is determined by the total XML elements named "bubble"
+  // The size of the array of Bubble objects is determined by the total JSON elements
   bubbles = new Bubble[json.size()]; 
 
   for (int i = 0; i < bubbles.length; i++) {
-
-    // Get the JSONObject representing the bubble
-    JSONObject bubble = json.getObject(i);
+    // Get the JSON representing the bubble
+    JSON bubble = json.getJSON(i);
 
     // The position element has two attributes: x and y
-    float x = bubble.getJSONObject("position").getInt("x");
-    float y = bubble.getJSONObject("position").getInt("y");
+    float x = bubble.getJSON("position").getInt("x");
+    float y = bubble.getJSON("position").getInt("y");
 
     // The diameter is the content of the child named "diamater"
     float diameter = bubble.getFloat("diameter");
@@ -95,13 +85,13 @@ void loadData() {
 void mousePressed() {
 
   // Create a new JSON bubble element
-  JSONObject newBubble = new JSONObject();
+  JSON newBubble = new JSON();
 
-  // Set the poisition element
-  JSONObject position = new JSONObject();
+  // Set the position element
+  JSON position = new JSON();
   position.setInt("x", mouseX);
   position.setInt("y", mouseY);
-  newBubble.setJSONObject("position", position);
+  newBubble.setJSON("position", position);
 
   // Set the diameter element
   newBubble.setFloat("diameter", random(40, 80));
@@ -109,25 +99,19 @@ void mousePressed() {
   // Set a label
   newBubble.setString("label", "New label");
 
-  // Append the new bubble to the JSONArray json
+  // Append the new bubble to the JSON json
   json.append( newBubble );
 	
   // Here we are removing the oldest bubble if there are more than 10
-  // If the XML file has more than 10 bubble elements
+  // If the JSON file has more than 10 bubble elements
   if (json.size() > 10) {
     // Delete the first one
     json.removeIndex(0);
   }
 	
-  JSONObject jsonBubbles = new JSONObject();
-  jsonBubbles.setJSONArray( "bubble", json );
-	
-  JSONObject root = new JSONObject();
-  root.setJSONObject( "bubbles", jsonBubbles );
-	
-  // Save a new XML file
+  // Save a new JSON file
   saveStrings("data/data.json", split(root.toString(), "\n"));
 
   // reload the new data 
- loadData();
+  loadData();
 }
