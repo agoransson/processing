@@ -6087,6 +6087,41 @@ public class PApplet extends Applet
   }
 
 
+  // JSON
+  public JSON loadJSON(String filename){
+    return loadJSON(filename, null);
+  }
+
+  // version that uses 'options' though there are currently no supported options
+  public JSON loadJSON(String filename, String options) {
+    JSONTokener tokener = new JSONTokener(createInput(filename));
+
+    if (tokener.nextClean() == '{') {
+      tokener.back();
+      try {
+        //obj = new JSONObject(tokener);
+        //obj.type = JSONType.OBJECT;
+        return new JSON(tokener);
+      } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("Failed to create JSONObject");
+      }
+    }
+    tokener.back();
+
+    if (tokener.nextClean() == '[') {
+      tokener.back();
+      try {
+        //arr = new JSONArray(tokener);
+        //arr.type = JSONType.ARRAY;
+        return new JSON(tokener);
+      } catch (Exception e) {
+        throw new RuntimeException("Failed to create JSONArray");
+      }
+    }
+
+    throw new RuntimeException("File is not JSON formatted");
+  }
 
   /**
    * @webref input:files

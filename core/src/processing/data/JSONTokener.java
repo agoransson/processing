@@ -7,6 +7,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 
+import processing.data.JSON.JSONObject;
+import processing.data.JSON.JSONArray;;
+
 /*
 Copyright (c) 2002 JSON.org
 
